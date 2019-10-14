@@ -18,9 +18,8 @@ private:
     int m0,l,ll,iniLinks;//initial conditions
     std::vector<int> Links;
     std::vector<int> PossibleLinks;
-    iMatrix inverseM(ll*m0,iRow());
-    void Cal_inverseM(iMatrix& aa);
-    void Cal_modules_links(iMatrix& aa);
+    void Cal_inverseM(iMatrix& aa, iMatrix& inv);
+    //void Cal_modules_links(iMatrix& aa);
 };
 
 #endif // DYNAMICAL_HMN_H

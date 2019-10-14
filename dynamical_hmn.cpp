@@ -18,9 +18,33 @@ dynamical_HMN::dynamical_HMN(int inm0,int inl)
     PossibleLinks.shrink_to_fit();
 }
 
-void dynamical_HMN::Cal_inverseM(iMatrix &aa)
+void dynamical_HMN::Cal_inverseM(iMatrix &aa, iMatrix &inv)
 {
+    int modulB,modulE;
+    for(int i=0;i<ll;++i)
+    {
+        modulB=i*m0;
+        modulE=(i+1)*m0-1;
+        for(int j=modulB;j<=modulE;++j)
+        {
+            for(int jk=modulB;jk<=modulE;++jk)
+            {
+                bool state=0;
+                for(int k=0;k<aa[j].size();++k)
+                {
+                    if(aa[j][k]==jk || j==jk)
+                    {
+                        state=1;
+                    }
+                }
+                if(state==0)
+                {
+                    inv[j].push_back(jk);
+                }
+            }
+        }
 
+    }
 }
 
 /*
@@ -147,7 +171,8 @@ void dynamical_HMN::uniformHIMC(iMatrix &aa, int iLink)
 {
     random_device rd;//random device to randomize tha seed
     mt19937 gen(rd());  // to seed mersenne twister.
-    Cal_inverseM(aa);
+    iMatrix inverseM(ll*m0,iRow());
+    Cal_inverseM(aa,inverseM);
     for(int i=0;i<ll;++i)
     {
         if(PossibleLinks[i]!=0)
