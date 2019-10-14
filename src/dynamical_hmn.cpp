@@ -175,13 +175,28 @@ void dynamical_HMN::uniformHIMC(iMatrix &aa, int iLink)
     Cal_inverseM(aa,inverseM);
     for(int i=0;i<ll;++i)
     {
-        if(PossibleLinks[i]!=0)
+        int modulB,modulE;
+        modulB=i*m0;
+        modulE=(i+1)*m0-1;
+        vector<int> vec1;
+        for(int j=modulB;j<=modulE;++j)
         {
-            int modulB,modulE;
-            modulB=i*m0;
-            modulE=(i+1)*m0-1;
-
-            uniform_int_distribution<> dis1(modulB, modulE);
+            if(inverseM[j].size()!=0)
+                vec1.push_back(j);
+        }
+        vec1.shrink_to_fit();
+        if(vec1.size()!=0)
+        {
+            uniform_int_distribution<> dist1(0, vec1.size());
+            int r1=dist1(gen);
+            int targetI=vec1[r1];
+            uniform_int_distribution<> dist2(0, inverseM[targetI].size());
+            int r2=dist2(gen);
+            int targetJ=inverseM[targetI][r2];
+            aa[targetI].push_back(targetJ);
+            aa[targetJ].push_back(targetI);
+            aa[targetI].shrink_to_fit();
+            aa[targetJ].shrink_to_fit();
         }
     }
 }
