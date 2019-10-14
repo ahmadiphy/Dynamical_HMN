@@ -172,7 +172,9 @@ void dynamical_HMN::uniformHIMC(iMatrix &aa, int iLink)
     random_device rd;//random device to randomize tha seed
     mt19937 gen(rd());  // to seed mersenne twister.
     iMatrix inverseM(ll*m0,iRow());
+    Matrixf inmf;
     Cal_inverseM(aa,inverseM);
+    inmf.printMatrixForm2File(inverseM,"inmf");
     for(int i=0;i<ll;++i)
     {
         int modulB,modulE;
@@ -185,20 +187,29 @@ void dynamical_HMN::uniformHIMC(iMatrix &aa, int iLink)
                 vec1.push_back(j);
         }
         vec1.shrink_to_fit();
-        if(vec1.size()!=0)
+        for(int ln=0;ln<iLink && vec1.size()!=0;++ln)
         {
-            uniform_int_distribution<> dist1(0, vec1.size());
+
+            uniform_int_distribution<> dist1(0, vec1.size()-1);
             int r1=dist1(gen);
             int targetI=vec1[r1];
-            uniform_int_distribution<> dist2(0, inverseM[targetI].size());
+            int invS=inverseM[targetI].size();
+            uniform_int_distribution<> dist2(0, invS-1);
             int r2=dist2(gen);
             int targetJ=inverseM[targetI][r2];
             aa[targetI].push_back(targetJ);
             aa[targetJ].push_back(targetI);
-            aa[targetI].shrink_to_fit();
-            aa[targetJ].shrink_to_fit();
+            vec1.erase(vec1.begin() + r1);
+            inverseM[targetI].erase(inverseM[targetI].begin()+r2);
+            for(int id=0;id<inverseM[targetJ].size();++id)
+            {
+                if(inverseM[targetJ][id]==targetI)
+                    inverseM[targetJ].erase(inverseM[targetJ].begin()+id);
+            }
+
         }
     }
+    inmf.printMatrixForm2File(inverseM,"_final_inverce");
 }
 
 void dynamical_HMN::uniformNHIMC(iMatrix &aa, int iLink)
