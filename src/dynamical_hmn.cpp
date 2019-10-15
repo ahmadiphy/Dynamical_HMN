@@ -167,14 +167,14 @@ void dynamical_HMN::interModule(iMatrix &aa)
     }
 }
 
-void dynamical_HMN::uniformHIMC(iMatrix &aa, int iLink)
+void dynamical_HMN::uniformHIMC(iMatrix &aa, int iLink)//growing modules
 {
     random_device rd;//random device to randomize tha seed
     mt19937 gen(rd());  // to seed mersenne twister.
     iMatrix inverseM(ll*m0,iRow());
     Matrixf inmf;
     Cal_inverseM(aa,inverseM);
-    inmf.printMatrixForm2File(inverseM,"inmf");
+    //inmf.printMatrixForm2File(inverseM,"inmf");
     for(int i=0;i<ll;++i)
     {
         int modulB,modulE;
@@ -209,7 +209,7 @@ void dynamical_HMN::uniformHIMC(iMatrix &aa, int iLink)
 
         }
     }
-    inmf.printMatrixForm2File(inverseM,"_final_inverce");
+    //inmf.printMatrixForm2File(inverseM,"_final_inverce");
 }
 
 void dynamical_HMN::uniformNHIMC(iMatrix &aa, int iLink)
