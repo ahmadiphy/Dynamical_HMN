@@ -4,4 +4,4 @@
 
 Hierarchical modular networks with growth and failure
 
-Usa only by referencing
+Us only by referencing
