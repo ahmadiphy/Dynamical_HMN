@@ -1,18 +1,21 @@
+//--------------------------------------------------------------------
+//-------------- Temporal Hierarchical Modular Networks --------------
+//--------------------------------------------------------------------
 #include "dynamical_hmn.h"
 using namespace std;
 
-dynamical_HMN::dynamical_HMN(int inm0,int inl)
+dynamical_HMN::dynamical_HMN(int inm0, int inl)
 {
-    m0=inm0;
-    l=inl;
-    ll=pow(2,l);
-    outll=ll;
-    outm0=m0;
-    iniLinks=2;
-    for(int i=0;i<l;++i)
+    m0 = inm0;
+    l = inl;
+    ll = pow(2,l);
+    outll = ll;
+    outm0 = m0;
+    iniLinks = 2;
+    for(int i=0; i<l; ++i)
     {
         Links.push_back(iniLinks);
-        PossibleLinks.push_back(pow(4,i)*pow(m0,2));
+        PossibleLinks.push_back(pow(4, i) * pow(m0, 2));
     }
     Links.shrink_to_fit();
     PossibleLinks.shrink_to_fit();
@@ -20,24 +23,24 @@ dynamical_HMN::dynamical_HMN(int inm0,int inl)
 
 void dynamical_HMN::Cal_inverseM(iMatrix &aa, iMatrix &inv)
 {
-    int modulB,modulE;
+    int modulB, modulE;
     for(int i=0;i<ll;++i)
     {
-        modulB=i*m0;
-        modulE=(i+1)*m0-1;
-        for(int j=modulB;j<=modulE;++j)
+        modulB = i * m0;
+        modulE = (i + 1)*m0 - 1;
+        for(int j=modulB; j<=modulE; ++j)
         {
-            for(int jk=modulB;jk<=modulE;++jk)
+            for(int jk=modulB; jk<=modulE; ++jk)
             {
-                bool state=0;
-                for(int k=0;k<aa[j].size();++k)
+                bool state = 0;
+                for(int k=0; k<aa[j].size(); ++k)
                 {
                     if(aa[j][k]==jk || j==jk)
                     {
-                        state=1;
+                        state = 1;
                     }
                 }
-                if(state==0)
+                if(state == 0)
                 {
                     inv[j].push_back(jk);
                 }
@@ -68,20 +71,20 @@ void dynamical_HMN::Cal_modules_links(iMatrix& aa)
 
 void dynamical_HMN::intraModule(iMatrix& aa)
 {
-    int nn=m0;
-    int nl=0;
-    int modulB,modulE;
-    for(int i=0;i<ll;++i)
+    int nn = m0;
+    int nl = 0;
+    int modulB, modulE;
+    for(int i=0; i<ll; ++i)
     {
-        modulB=i*nn;
-        modulE=(i+1)*nn;
-        for(int ii=0;ii<nn;++ii)
+        modulB = i * nn;
+        modulE = (i + 1)*nn;
+        for(int ii=0; ii<nn; ++ii)
         {
-            for(int j=modulB;j<nl;++j)
+            for(int j=modulB; j<nl; ++j)
             {
                 aa[nl].push_back(j);
             }
-            for(int j=nl+1;j<modulE;++j)
+            for(int j=nl+1; j<modulE; ++j)
             {
                 aa[nl].push_back(j);
             }
@@ -93,12 +96,12 @@ void dynamical_HMN::intraModule(iMatrix& aa)
 
 void dynamical_HMN::intraModuleLine(iMatrix& aa)
 {
-    int modulB,modulE;
-    for(int i=0;i<ll;++i)
+    int modulB, modulE;
+    for(int i=0; i<ll; ++i)
     {
-        modulB=i*m0;
-        modulE=(i+1)*m0;
-        for(int j=modulB;j<modulE-1;++j)
+        modulB = i*m0;
+        modulE = (i + 1)*m0;
+        for(int j=modulB; j<modulE-1; ++j)
         {
             aa[j].push_back(j+1);
             aa[j+1].push_back(j);
@@ -109,12 +112,12 @@ void dynamical_HMN::intraModuleLine(iMatrix& aa)
 
 void dynamical_HMN::intraModuleRing(iMatrix& aa)
 {
-    int modulB,modulE;
-    for(int i=0;i<ll;++i)
+    int modulB, modulE;
+    for(int i=0; i<ll; ++i)
     {
-        modulB=i*m0;
-        modulE=(i+1)*m0;
-        for(int j=modulB;j<modulE;++j)
+        modulB = i*m0;
+        modulE = (i+1)*m0;
+        for(int j=modulB; j<modulE; ++j)
         {
             aa[j].push_back(j+1);
             aa[j+1].push_back(j);
@@ -125,8 +128,8 @@ void dynamical_HMN::intraModuleRing(iMatrix& aa)
 
 void dynamical_HMN::interModule(iMatrix &aa)
 {
-    int nn=m0;
-    int alpha=iniLinks;
+    int nn = m0;
+    int alpha = iniLinks;
     random_device rd;
     mt19937 gen(rd());  // to seed mersenne twister.
     uniform_real_distribution<> dist(0,1);
